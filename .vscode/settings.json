@@ -1,0 +1,9 @@
+{
+  "[cpp]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "xaver.clang-format"
+  },
+  "clang-format.executable": "${workspaceRoot}/node_modules/.bin/clang-format",
+  "clang-format.style": "file",
+  "typescript.tsdk": "node_modules/typescript/lib"
+}

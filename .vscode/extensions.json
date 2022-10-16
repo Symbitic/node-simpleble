@@ -1,0 +1,7 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "xaver.clang-format",
+    "esbenp.prettier-vscode"
+  ]
+}

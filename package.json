@@ -1,0 +1,85 @@
+{
+  "name": "simpleble",
+  "description": "Bluetooth LE library for Node, Deno, and Bun",
+  "license": "MIT",
+  "version": "0.1.0",
+  "type": "module",
+  "sideEffects": false,
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    "import": "./dist/index.js",
+    "bun": "./dist/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Symbitic/node-simpleble.git"
+  },
+  "contributors": [
+    {
+      "name": "Alex Shaw",
+      "email": "alex.shaw.as@gmail.com",
+      "url": "https://github.com/symbitic"
+    }
+  ],
+  "keywords": [
+    "bindings",
+    "bluetooth",
+    "ble",
+    "napi",
+    "node-addon-api",
+    "simpleble"
+  ],
+  "scripts": {
+    "build-cpp": "cmake-js compile",
+    "build-deno": "denoify",
+    "build-ts": "tsc",
+    "build": "concurrently \"npm:build-*\"",
+    "clean": "cmake-js clean",
+    "install": "prebuild-install --backend cmake-js --runtime napi || cmake-js rebuild",
+    "lint": "eslint ./src --ext .ts",
+    "prepublishOnly": "npm run build-ts",
+    "pre-build": "prebuild --backend cmake-js --runtime napi --all --strip --verbose",
+    "watch": "tsc -w --preserveWatchOutput"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "binary": {
+    "module_name": "simpleble",
+    "module_path": "./build/Release/",
+    "remote_path": "v{version}",
+    "host": "https://github.com/Symbitic/node-simpleble/releases/download/",
+    "napi_versions": [
+      7
+    ]
+  },
+  "denoify": {
+    "index": "./src/mod.deno.ts",
+    "includes": [
+      "examples/deno",
+      "LICENSE",
+      "README.md"
+    ]
+  },
+  "dependencies": {
+    "node-addon-api": "^5.0.0",
+    "prebuild-install": "^7.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^18.8.5",
+    "@typescript-eslint/eslint-plugin": "^5.40.0",
+    "@typescript-eslint/parser": "^5.40.0",
+    "cmake-js": "^7.0.0",
+    "concurrently": "^7.3.0",
+    "denoify": "^1.2.2",
+    "eslint": "^8.25.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-node": "^11.1.0",
+    "prebuild": "^11.0.4",
+    "prettier": "^2.7.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.7.4"
+  }
+}
