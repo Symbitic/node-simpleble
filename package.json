@@ -70,7 +70,7 @@
     "@types/node": "^18.8.5",
     "@typescript-eslint/eslint-plugin": "^5.40.1",
     "@typescript-eslint/parser": "^5.40.1",
-    "cmake-js": "^6.3.2",
+    "cmake-js": "^7.0.0",
     "concurrently": "^7.3.0",
     "denoify": "^1.2.2",
     "eslint": "^8.25.0",
