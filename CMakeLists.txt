@@ -1,10 +1,6 @@
-# SPDX-FileCopyrightText: 2022 Alex Shaw <alex.shaw.as@gmail.com>
-#
-# SPDX-License-Identifier: MIT
-
 cmake_minimum_required(VERSION 3.16)
 
-project(simpleble)
+project(simpleble-node)
 
 option(ENABLE_NODE "Build Node.js bindings" ON)
 option(ENABLE_FFI "Build FFI bindings" ON)
@@ -19,6 +15,11 @@ endif()
 add_subdirectory(SimpleBLE/simpleble)
 
 if (ENABLE_NODE)
+  execute_process(COMMAND node -p "require('node-addon-api').include_dir"
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    OUTPUT_VARIABLE NODE_ADDON_API_DIR
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
   add_library(simpleble-node SHARED
     lib/adapter.h
     lib/adapter.cpp
@@ -30,26 +31,16 @@ if (ENABLE_NODE)
   target_include_directories(simpleble-node PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/lib
     ${CMAKE_JS_INC}
+    ${NODE_ADDON_API_DIR}
   )
-  target_link_libraries(simpleble-node PRIVATE
-    simpleble-c
-    ${CMAKE_JS_LIB}
-  )
-  target_compile_definitions(simpleble-node PRIVATE
-    NAPI_VERSION=7
-    #NDEBUG
-    #NAPI_EXPERIMENTAL
-    #NAPI_DISABLE_CPP_EXCEPTIONS
-  )
+  target_link_libraries(simpleble-node PRIVATE simpleble-c ${CMAKE_JS_LIB})
+  target_compile_definitions(simpleble-node PRIVATE NAPI_VERSION=7)
   set_target_properties(simpleble-node PROPERTIES
     OUTPUT_NAME "simpleble"
     CXX_STANDARD 17
     PREFIX ""
     SUFFIX ".node"
   )
-  if(MSVC AND CMAKE_JS_NODELIB_DEF AND CMAKE_JS_NODELIB_TARGET)
-    execute_process(COMMAND ${CMAKE_AR} /def:${CMAKE_JS_NODELIB_DEF} /out:${CMAKE_JS_NODELIB_TARGET} ${CMAKE_STATIC_LINKER_FLAGS})
-  endif()
 endif()
 
 if (ENABLE_FFI)

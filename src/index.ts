@@ -1,3 +1,3 @@
 // @denoify-ignore
-export * from "./bindings";
-export * from "./node-bindings";
+export * from "./bindings.js";
+export * from "./node-bindings.js";

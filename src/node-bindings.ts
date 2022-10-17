@@ -10,7 +10,7 @@ import type {
   Peripheral,
   Service,
   UserData
-} from "./bindings";
+} from "./bindings.js";
 
 const require = createRequire(import.meta.url);
 

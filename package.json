@@ -9,7 +9,7 @@
   "types": "dist/index.d.ts",
   "exports": {
     "import": "./dist/index.js",
-    "bun": "./dist/index.ts"
+    "bun": "./src/index.bun.ts"
   },
   "repository": {
     "type": "git",
@@ -70,7 +70,7 @@
     "@types/node": "^18.8.5",
     "@typescript-eslint/eslint-plugin": "^5.40.0",
     "@typescript-eslint/parser": "^5.40.0",
-    "cmake-js": "^7.0.0",
+    "cmake-js": "^6.3.2",
     "concurrently": "^7.3.0",
     "denoify": "^1.2.2",
     "eslint": "^8.25.0",
