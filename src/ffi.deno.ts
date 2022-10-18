@@ -154,18 +154,7 @@ export class DenoBindings implements Bindings {
     }>
   > = new Map();
 
-  /**
-   * Creates a new FFI instance.
-   *
-   * ## Example
-   *
-   * ```ts
-   * import { SimpleBLE } from "https://deno.land/x/webbluetooth@VERSION/ffi.ts";
-   *
-   * const simpleble = new SimpleBLE();
-   * const adaptersCount = simpleble_adapter_get_count();
-   * ```
-   */
+  /** Creates a new FFI instance. */
   constructor() {
     instances.push(this);
   }
@@ -192,7 +181,6 @@ export class DenoBindings implements Bindings {
    * @param name The name of the bound function
    */
   #unbind(name: string): void {
-    //lib.symbols.webview_unbind(this.#handle, encodeCString(name));
     this.#callbacks.get(name)?.close();
     this.#callbacks.delete(name);
   }
