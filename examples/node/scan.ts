@@ -1,4 +1,4 @@
-import { resolveBindings } from "../../dist/index.js";
+import { bindings } from "../../dist/index.js";
 
 function delay(ms: number): Promise<void> {
   return new Promise((resolve): void => {
@@ -10,8 +10,6 @@ function delay(ms: number): Promise<void> {
 const DELAY = 2000;
 
 try {
-  const bindings = await resolveBindings();
-
   const adaptersCount = bindings.simpleble_adapter_get_count();
   if (adaptersCount === 0) {
     console.error("No Bluetooth adapters found");

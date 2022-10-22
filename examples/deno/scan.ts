@@ -1,12 +1,10 @@
 // @ts-nocheck
 import { delay } from "https://deno.land/std@0.158.0/async/mod.ts";
-import { resolveBindings } from "../../mod.ts";
+import { bindings } from "../../mod.ts";
 
 const DELAY = 2000;
 
 try {
-  const bindings = await resolveBindings();
-
   const adaptersCount = bindings.simpleble_adapter_get_count();
   if (adaptersCount === 0) {
     console.error("No Bluetooth adapters found");

@@ -1,6 +1,6 @@
-import * as readline from 'node:readline/promises';
-import { stdin as input, stdout as output } from 'node:process';
-import { bindings } from "../../dist/index";
+// @ts-nocheck
+import { delay } from "https://deno.land/std@0.158.0/async/mod.ts";
+import { bindings } from "../../mod.ts";
 
 function delay(ms: number): Promise<void> {
   return new Promise((resolve): void => {
@@ -11,8 +11,6 @@ function delay(ms: number): Promise<void> {
 
 const SCAN_TIMEOUT = 2000;
 const DISCONNECT_TIMEOUT = 5000;
-
-const rl = readline.createInterface({ input, output });
 
 try {
   const adaptersCount = bindings.simpleble_adapter_get_count();
@@ -43,7 +41,7 @@ try {
     console.log(`[${i}] - ${str}`);
   }
 
-  const indexString = await rl.question("Please select a device to connect to: ");
+  const indexString = prompt("Please select a device to connect to:");
   const index = parseInt(indexString || "", 10);
   if (isNaN(index) || index < 0 || index >= resultsCount) {
     throw new Error("Invalid device selected");
@@ -62,7 +60,7 @@ try {
     console.log(`[${i}] - ${service.uuid}`);
   }
 
-  const serviceString = await rl.question("Please select a service: ");
+  const serviceString = prompt("Please select a service:");
   const serviceNum = parseInt(serviceString || "", 10);
   if (isNaN(serviceNum) || serviceNum < 0 || serviceNum >= servicesCount) {
     bindings.simpleble_peripheral_disconnect(device);
@@ -76,7 +74,7 @@ try {
     console.log(`[${i}] ${service.characteristics[i].uuid}`);
   }
 
-  const charString = await rl.question("Please select a characteristic: ");
+  const charString = prompt("Please select a characteristic:");
   const charNum = parseInt(charString || "", 10);
   if (isNaN(charNum) || charNum < 0 || charNum >= charsCount) {
     bindings.simpleble_peripheral_disconnect(device);
@@ -84,7 +82,7 @@ try {
   }
   const char = service.characteristics[charNum];
 
-  const registered = bindings.simpleble_peripheral_notify(device, service.uuid, char.uuid, (_service: string, _characteristic: string, data: Uint8Array) => {
+  const registered = simpleble_peripheral_notify(device, service.uuid, char.uuid, (_service: string, _characteristic: string, data: Uint8Array) => {
     const nums: string[] = [];
     data.forEach((num) => {
       nums.push(num.toString(16).padStart(2, "0"));
@@ -94,8 +92,9 @@ try {
   }, null);
   if (!registered) {
     console.error("Failed to register notify callback");
-    bindings.simpleble_peripheral_disconnect(device);
-    process.exit(1);
+    simpleble_peripheral_disconnect(device);
+    simpleble_release_handles();
+    Deno.exit(1);
   }
 
   console.log(`Disconnecting in ${DISCONNECT_TIMEOUT / 1000} seconds`);
@@ -105,7 +104,6 @@ try {
   bindings.simpleble_peripheral_unsubscribe(device, service.uuid, char.uuid);
   bindings.simpleble_peripheral_disconnect(device);
   process.exit(0);
-
 } catch (err: any) {
   console.error(`Error: ${err.message}`);
   process.exit(1);

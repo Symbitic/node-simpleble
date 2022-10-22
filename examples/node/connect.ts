@@ -1,6 +1,6 @@
 import * as readline from 'node:readline/promises';
 import { stdin as input, stdout as output } from 'node:process';
-import { resolveBindings } from "../../dist/index";
+import { bindings } from "../../dist/index";
 
 function delay(ms: number): Promise<void> {
   return new Promise((resolve): void => {
@@ -15,8 +15,6 @@ const DISCONNECT_TIMEOUT = 5000;
 const rl = readline.createInterface({ input, output });
 
 try {
-  const bindings = await resolveBindings();
-
   const adaptersCount = bindings.simpleble_adapter_get_count();
   if (adaptersCount === 0) {
     console.error("No Bluetooth adapters found");
