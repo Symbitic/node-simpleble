@@ -53,9 +53,9 @@ To build Node-SimpleBLE:
 
 After building SimpleBLE and the bindings, run one of the examples:
 
-    deno run -A --unstable https://deno.land/x/simpleble@0.1.0/examples/deno/simpleble-scan.ts
-    deno run -A --unstable ./deno_dist/examples/deno/simpleble-scan.ts
-    npx ts-node-esm ./examples/node/simpleble-scan.ts
+    deno run -A --unstable https://deno.land/x/simpleble@0.1.0/examples/deno/scan.ts
+    deno run -A --unstable ./deno_dist/examples/deno/scan.ts
+    npx ts-node-esm ./examples/node/scan.ts
 
 ## License
 
