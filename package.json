@@ -2,7 +2,7 @@
   "name": "simpleble",
   "description": "Bluetooth LE library for Node, Deno, and Bun",
   "license": "MIT",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "type": "module",
   "sideEffects": false,
   "module": "dist/index.js",
