@@ -5,7 +5,6 @@ import { fileURLToPath } from "node:url";
 import type {
   Adapter,
   Bindings,
-  BindingsResolver,
   ManufacturerData,
   Peripheral,
   Service,
@@ -16,7 +15,7 @@ const require = createRequire(import.meta.url);
 
 const BINDINGS_NAME = "simpleble.node";
 
-let bindings: NodeBindings | undefined;
+let bindings: SimpleBLE | undefined;
 
 /**
  * Unload the bindings and release all resources. Should be called
@@ -30,32 +29,6 @@ function unload(): void {
 
 process.on('exit', unload);
 process.on('SIGINT', unload);
-
-export const resolveBindings: BindingsResolver = (): Bindings => {
-  if (bindings) {
-    return bindings;
-  }
-  const dir = dirname(fileURLToPath(import.meta.url));
-  const moduleRoot = resolve(dir, '..');
-  const paths = [
-    join(moduleRoot, 'build', 'Release', BINDINGS_NAME),
-    join(moduleRoot, 'prebuilds', `${process.platform}-${process.arch}`, BINDINGS_NAME)
-  ];
-  let binding: Bindings | undefined;
-
-  for (const path of paths) {
-    try {
-      binding = require(path);
-    } catch (_e) {
-      continue;
-    }
-  }
-  if (!binding) {
-    throw new Error("Failed to load addon");
-  }
-
-  return binding;
-}
 
 /**
  * An instance of a SimpleBLE interface.
@@ -94,11 +67,37 @@ export const resolveBindings: BindingsResolver = (): Bindings => {
  * console.log(`Found ${resultsCount} devices`);
  * ```
  */
-export class NodeBindings implements Bindings {
+export class SimpleBLE implements Bindings {
   private _adapters: Set<Adapter> = new Set();
   private _peripherals: Set<Peripheral> = new Set();
 
   constructor(private readonly _bindings: Bindings) { }
+
+  static load(): Promise<Bindings> {
+    if (bindings) {
+      return Promise.resolve(bindings);
+    }
+    const dir = dirname(fileURLToPath(import.meta.url));
+    const moduleRoot = resolve(dir, '..');
+    const paths = [
+      join(moduleRoot, 'build', 'Release', BINDINGS_NAME),
+      join(moduleRoot, 'prebuilds', `${process.platform}-${process.arch}`, BINDINGS_NAME)
+    ];
+    let binding: Bindings | undefined;
+
+    for (const path of paths) {
+      try {
+        binding = require(path);
+      } catch (_e) {
+        continue;
+      }
+    }
+    if (!binding) {
+      throw new Error("Failed to load addon");
+    }
+
+    return Promise.resolve(binding);
+  }
 
   destroy(): void {
     for (const handle of this._peripherals) {

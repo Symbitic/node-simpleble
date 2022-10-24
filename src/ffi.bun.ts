@@ -124,15 +124,6 @@ async function resolvePath() {
   return cachedFile;
 }
 
-export const resolveBindings: BindingsResolver = async (): Promise<Bindings> => {
-  if (!lib) {
-    const libPath = await resolvePath();
-    lib = dlopen(libPath, symbols);
-  }
-
-  return new BunBindings();
-}
-
 /**
  * An instance of a SimpleBLE interface.
  *
@@ -170,7 +161,7 @@ export const resolveBindings: BindingsResolver = async (): Promise<Bindings> => 
  * console.log(`Found ${resultsCount} devices`);
  * ```
  */
-export class BunBindings implements Bindings {
+export class SimpleBLE implements Bindings {
   #adapters: Set<Adapter> = new Set();
   #peripherals: Set<Peripheral> = new Set();
   /*
@@ -186,6 +177,15 @@ export class BunBindings implements Bindings {
   /** Creates a new FFI instance. */
   constructor() {
     instances.push(this);
+  }
+
+  async load(): Promise<SimpleBLE> {
+    if (!lib) {
+      const libPath = await resolvePath();
+      lib = dlopen(libPath, symbols);
+    }
+
+    return new SimpleBLE();
   }
 
   /** Releases all resources. */

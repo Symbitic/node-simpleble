@@ -5,6 +5,7 @@ import { dirname, fromFileUrl, resolve } from "https://deno.land/std@0.158.0/pat
 import { symbols } from "./symbols.ts";
 import { Bindings } from "./bindings.ts";
 import { VERSION } from "./version.ts";
+import { SimpleBLE } from "./ffi.bun";
 
 const REPO = "https://github.com/Symbitic/node-simpleble";
 const LIBNAME = "simpleble";
@@ -69,7 +70,7 @@ function cstr(str: string): Uint8Array {
  * All active instances. This is used internally for automatically
  * destroying all instances once {@link unload} is called.
  */
-const instances: DenoBindings[] = [];
+const instances: SimpleBLE[] = [];
 
 /**
  * Unload the library and destroy all SimpleBLE instances. Should be called
@@ -106,7 +107,7 @@ export const resolveBindings: BindingsResolver = async (): Promise<Bindings> => 
   }
 
   // TODO: Maybe pass lib to constructor?
-  return new DenoBindings();
+  return new SimpleBLE();
 }
 
 /**
@@ -141,7 +142,7 @@ export const resolveBindings: BindingsResolver = async (): Promise<Bindings> => 
  * console.log(`Found ${resultsCount} devices`);
  * ```
  */
-export class DenoBindings implements Bindings {
+export class SimpleBLE implements Bindings {
   #adapters: Set<Adapter> = new Set();
   #peripherals: Set<Peripheral> = new Set();
   #callbacks: Map<
@@ -155,6 +156,31 @@ export class DenoBindings implements Bindings {
   /** Creates a new FFI instance. */
   constructor() {
     instances.push(this);
+  }
+
+  async static load() {
+    if (!lib) {
+      // Load the shared library locally or remotely.
+      if (PRODUCTION) {
+        lib = await Plug.prepare({
+          name: LIBNAME,
+          url: `${REPO}/releases/download/v${VERSION}`,
+          policy: Plug.CachePolicy.STORE,
+        }, symbols);
+      } else {
+        const importDir = dirname(fromFileUrl(import.meta.url));
+        const buildDir = resolve(importDir, "..", "build");
+        const filename = {
+          windows: `${buildDir}/Release/${LIBNAME}.dll`,
+          darwin: `${buildDir}/Release/lib${LIBNAME}.dylib`,
+          linux: `${buildDir}/Release/lib${LIBNAME}.so`,
+        }[Deno.build.os];
+        lib = Deno.dlopen(filename, symbols);
+      }
+    }
+
+    // TODO: Maybe pass lib to constructor?
+    return new SimpleBLE();
   }
 
   /** Releases all resources. */
