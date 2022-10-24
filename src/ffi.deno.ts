@@ -115,10 +115,8 @@ export const resolveBindings: BindingsResolver = async (): Promise<Bindings> => 
  * ## Example
  *
  * ```ts
- * import { resolveBindings } from "https://deno.land/x/webbluetooth@VERSION/ffi.ts";
+ * import { bindings } from "https://deno.land/x/webbluetooth@VERSION/mod.ts";
  * import { delay } from "https://deno.land/std@0.158.0/async/mod.ts";
- *
- * const bindings = await resolveBindings();
  *
  * const adaptersCount = bindings.simpleble_adapter_get_count();
  * if (adaptersCount === 0) {

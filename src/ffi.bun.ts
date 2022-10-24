@@ -139,15 +139,13 @@ export const resolveBindings: BindingsResolver = async (): Promise<Bindings> => 
  * ## Example
  *
  * ```ts
- * import { resolveBindings } from "simpleble";
+ * import { bindings } from "simpleble";
  *
  * function delay(ms: number): Promise<void> {
  *  return new Promise((resolve): void => {
  *    setTimeout(resolve, ms);
  *  });
  * }
- *
- * const bindings = await resolveBindings();
  *
  * const adaptersCount = bindings.simpleble_adapter_get_count();
  * if (adaptersCount === 0) {
@@ -172,7 +170,7 @@ export const resolveBindings: BindingsResolver = async (): Promise<Bindings> => 
  * console.log(`Found ${resultsCount} devices`);
  * ```
  */
- export class BunBindings implements Bindings {
+export class BunBindings implements Bindings {
   #adapters: Set<Adapter> = new Set();
   #peripherals: Set<Peripheral> = new Set();
   /*
@@ -347,12 +345,13 @@ export const resolveBindings: BindingsResolver = async (): Promise<Bindings> => 
   }
 
   /** Register a callback for when scanning begins. */
-  /*
   simpleble_adapter_set_callback_on_scan_start(
     handle: Adapter,
     cb: (adapter: Adapter, userdata: UserData) => void,
     userdata: UserData = null,
   ): boolean {
+    throw new Error("simpleble_adapter_set_callback_on_scan_start is not implemented yet")
+    /*
     const cbResource = new Deno.UnsafeCallback(
       {
         parameters: ["pointer", "pointer"],
@@ -370,8 +369,8 @@ export const resolveBindings: BindingsResolver = async (): Promise<Bindings> => 
       userdata,
     );
     return ret > 0 ? false : true;
+    */
   }
-  */
 
   /** Register a callback for when scanning stops. */
   simpleble_adapter_set_callback_on_scan_stop_wrapper(
@@ -379,7 +378,7 @@ export const resolveBindings: BindingsResolver = async (): Promise<Bindings> => 
     cb: (adapter: Adapter, userdata: UserData) => void,
     userdata: UserData = null,
   ): boolean {
-    throw new Error("simpleble_adapter_set_callback_on_scan_stop_wrapper is not implemented yet")
+    throw new Error("simpleble_adapter_set_callback_on_scan_stop_wrapper is not implemented yet");
     /*
     const cbResource = new Deno.UnsafeCallback(
       {
@@ -402,12 +401,13 @@ export const resolveBindings: BindingsResolver = async (): Promise<Bindings> => 
   }
 
   /** Register a callback for when an adapter is updated. */
-  /*
   simpleble_adapter_set_callback_on_scan_updated(
     handle: Adapter,
     cb: (adapter: Adapter, peripheral: Peripheral, userdata: UserData) => void,
     userdata: UserData = null,
   ): boolean {
+    throw new Error("simpleble_adapter_set_callback_on_scan_updated is not implemented yet");
+    /*
     const cbResource = new Deno.UnsafeCallback(
       {
         parameters: ["pointer", "pointer", "pointer"],
@@ -425,8 +425,8 @@ export const resolveBindings: BindingsResolver = async (): Promise<Bindings> => 
       userdata,
     );
     return ret > 0 ? false : true;
+    */
   }
-  */
 
   /** Releases a peripheral device handle. */
   simpleble_peripheral_release_handle(handle: Peripheral): void {

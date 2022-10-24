@@ -20,7 +20,7 @@ let bindings: NodeBindings | undefined;
 
 /**
  * Unload the bindings and release all resources. Should be called
- * automatically during the `onexit` event.
+ * automatically at exit.
  */
 function unload(): void {
   if (bindings) {
@@ -57,6 +57,43 @@ export const resolveBindings: BindingsResolver = (): Bindings => {
   return binding;
 }
 
+/**
+ * An instance of a SimpleBLE interface.
+ *
+ * ## Example
+ *
+ * ```ts
+ * import { bindings } from "simpleble";
+ *
+ * function delay(ms: number): Promise<void> {
+ *  return new Promise((resolve): void => {
+ *    setTimeout(resolve, ms);
+ *  });
+ * }
+ *
+ * const adaptersCount = bindings.simpleble_adapter_get_count();
+ * if (adaptersCount === 0) {
+ *   console.error("No Bluetooth adapters found");
+ *   process.exit(1);
+ * }
+ *
+ * console.log(`Found ${adaptersCount} adapters`);
+ * const adapter = bindings.simpleble_adapter_get_handle(0);
+ *
+ * console.log(`Starting scan for 5 seconds`);
+ * bindings.simpleble_adapter_scan_start(adapter);
+ * await delay(5000);
+ * bindings.simpleble_adapter_scan_stop(adapter);
+ * console.log(`Finished scan`);
+ *
+ * const count = bindings.simpleble_adapter_scan_get_results_count(adapter);
+ * if (count === 0) {
+ *   console.error("No devices found");
+ *   process.exit(1);
+ * }
+ * console.log(`Found ${resultsCount} devices`);
+ * ```
+ */
 export class NodeBindings implements Bindings {
   private _adapters: Set<Adapter> = new Set();
   private _peripherals: Set<Peripheral> = new Set();
