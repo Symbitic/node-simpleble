@@ -1,3 +1,19 @@
+## [1.0.0](https://github.com/Symbitic/node-simpleble/compare/v0.3.0...v1.0.0) (2022-10-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* rename platform-specific bindings
+
+### Features
+
+* rename platform-specific bindings ([94bafdd](https://github.com/Symbitic/node-simpleble/commit/94bafdd503b3e97f53757a67a5bf06a065a6fdc4))
+
+
+### Bug Fixes
+
+* correct ffi import in Deno ([bfa0f26](https://github.com/Symbitic/node-simpleble/commit/bfa0f26c664bbf814df5c0bbbcf96e6382e2fc45))
+
 ## [0.3.0](https://github.com/Symbitic/node-simpleble/compare/v0.2.0...v0.3.0) (2022-10-22)
 
 
