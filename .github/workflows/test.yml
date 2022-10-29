@@ -20,18 +20,20 @@ jobs:
           submodules: recursive
 
       - name: Install DBus
-        run: sudo apt-get install -y libdbus-1-dev
         if: contains(matrix.os, 'ubuntu')
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libdbus-1-dev
 
       - name: Setup CMake
-        uses: jwlawson/actions-setup-cmake@v1.12
         if: contains(matrix.os, 'macos')
+        uses: jwlawson/actions-setup-cmake@v1.12
         with:
           cmake-version: '3.21.x'
 
       - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v1.0.2
         if: contains(matrix.os, 'windows')
+        uses: microsoft/setup-msbuild@v1.0.2
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -49,17 +51,3 @@ jobs:
 
       - name: Build
         run: npm run build
-
-  auto-merge:
-    needs:
-      - build
-    permissions:
-      pull-requests: write
-      contents: write
-    runs-on: ubuntu-latest
-    steps:
-      - uses: fastify/github-action-merge-dependabot@v3.0.0
-        with:
-          target: minor
-          merge-method: rebase
-          github-token: ${{ secrets.GITHUB_TOKEN }}
