@@ -5,7 +5,6 @@ import { dirname, fromFileUrl, resolve } from "https://deno.land/std@0.158.0/pat
 import { symbols } from "./symbols.ts";
 import { Bindings } from "./bindings.ts";
 import { VERSION } from "./version.ts";
-import { SimpleBLE } from "./ffi.bun";
 
 const REPO = "https://github.com/Symbitic/node-simpleble";
 const LIBNAME = "simpleble";
@@ -158,7 +157,7 @@ export class SimpleBLE implements Bindings {
     instances.push(this);
   }
 
-  async static load() {
+  static async load() {
     if (!lib) {
       // Load the shared library locally or remotely.
       if (PRODUCTION) {

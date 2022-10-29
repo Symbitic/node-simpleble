@@ -179,7 +179,7 @@ export class SimpleBLE implements Bindings {
     instances.push(this);
   }
 
-  async load(): Promise<SimpleBLE> {
+  static async load(): Promise<SimpleBLE> {
     if (!lib) {
       const libPath = await resolvePath();
       lib = dlopen(libPath, symbols);
