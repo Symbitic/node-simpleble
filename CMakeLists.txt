@@ -41,6 +41,11 @@ if (ENABLE_NODE)
     PREFIX ""
     SUFFIX ".node"
   )
+
+  if (MSVC AND CMAKE_JS_NODELIB_DEF AND CMAKE_JS_NODELIB_TARGET)
+    # Generate node.lib
+    execute_process(COMMAND ${CMAKE_AR} /def:${CMAKE_JS_NODELIB_DEF} /out:${CMAKE_JS_NODELIB_TARGET} ${CMAKE_STATIC_LINKER_FLAGS})
+  endif()
 endif()
 
 if (ENABLE_FFI)
