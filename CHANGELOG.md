@@ -1,4 +1,4 @@
-## [1.0.0](https://github.com/Symbitic/node-simpleble/compare/v0.3.0...v1.0.0) (2022-10-25)
+## [1.0.0](https://github.com/Symbitic/node-simpleble/compare/v0.3.0...v1.0.0) (2022-10-29)
 
 
 ### ⚠ BREAKING CHANGES
@@ -13,6 +13,7 @@
 ### Bug Fixes
 
 * correct ffi import in Deno ([bfa0f26](https://github.com/Symbitic/node-simpleble/commit/bfa0f26c664bbf814df5c0bbbcf96e6382e2fc45))
+* revert cmake-js ([189ba63](https://github.com/Symbitic/node-simpleble/commit/189ba6358aa6a4546a8bcdca604191e95cbda9db))
 
 ## [0.3.0](https://github.com/Symbitic/node-simpleble/compare/v0.2.0...v0.3.0) (2022-10-22)
 
