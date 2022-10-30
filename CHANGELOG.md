@@ -1,3 +1,10 @@
+### [1.0.1](https://github.com/Symbitic/node-simpleble/compare/v1.0.0...v1.0.1) (2022-10-30)
+
+
+### Bug Fixes
+
+* correct public static order ([5002faf](https://github.com/Symbitic/node-simpleble/commit/5002fafd34a6343940488a60324bdbabfb0bb21a))
+
 ## [1.0.0](https://github.com/Symbitic/node-simpleble/compare/v0.3.0...v1.0.0) (2022-10-29)
 
 
