@@ -22,8 +22,8 @@ jobs:
       - name: Install DBus
         if: contains(matrix.os, 'ubuntu')
         run: |
-          sudo dpkg --add-architecture armhf
           sudo apt-get update
+          sudo dpkg --add-architecture armhf
           sudo apt-get install -y libdbus-1-dev libdbus-1-dev:armhf
 
       - run: ls -1 /usr/arm-linux-gnueabihf/lib/ || echo "Bad"
