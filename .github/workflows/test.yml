@@ -7,7 +7,7 @@ on:
   pull_request:
 
 jobs:
-  build:
+  build2:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -19,12 +19,30 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install DBus
-        if: contains(matrix.os, 'ubuntu')
-        run: |
-          sudo apt-get update && sudo dpkg --add-architecture armhf && sudo apt-get update && sudo apt-get install --assume-yes libdbus-1-dev libdbus-1-dev:armhf pkg-config
+      - name: "Test2"
+        run: echo $PWD
 
-      - run: ls -1 /usr/arm-linux-gnueabihf/lib/ || echo "Bad"
-      - run: ls -1 /usr/lib/arm-linux-gnueabihf/ || echo "Bad"
-      - run: ls -1 /usr/include/dbus-1.0 || echo "Bad"
-      - run: ls -1 /usr/lib64/dbus-1.0/include || echo Bad
+      - name: "Test3"
+        run: ls -1
+
+  container-test-job:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/prebuild/linux-arm64-musl:2
+      env:
+        NODE_ENV: development
+        NO_UPDATE_NOTIFIER: true
+      ports:
+        - 80
+      #volumes:
+        #- my_docker_volume:/volume_mount
+        #- /input
+    steps:
+      - name: Clone Repository
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Test 1
+        run: ls -1 -a
+
