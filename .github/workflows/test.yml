@@ -60,7 +60,6 @@ jobs:
       matrix:
         arch:
           - arm64
-          - armhf
     steps:
       - name: Clone Repository
         uses: actions/checkout@v2
