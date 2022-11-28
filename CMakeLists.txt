@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(simpleble-node)
+project(simpleble-node-wrapper)
 
 option(ENABLE_NODE "Build Node.js bindings" ON)
 option(ENABLE_FFI "Build FFI bindings" ON)

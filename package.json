@@ -41,6 +41,8 @@
     "build-deno": "denoify",
     "build-ts": "tsc",
     "build": "concurrently \"npm:build-*\"",
+    "cross-build-arm64": "cmake-js compile --CDCMAKE_TOOLCHAIN_FILE=\"$PWD/cmake/zig-toolchain-aarch64.cmake\"",
+    "cross-build-armhf": "cmake-js compile --CDCMAKE_TOOLCHAIN_FILE=\"$PWD/cmake/zig-toolchain-arm.cmake\"",
     "clean": "cmake-js clean",
     "install": "prebuild-install --backend cmake-js --runtime napi || cmake-js rebuild",
     "lint": "eslint ./src --ext .ts",
