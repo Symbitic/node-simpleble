@@ -60,6 +60,7 @@ jobs:
       matrix:
         arch:
           - arm64
+          - armhf
     steps:
       - name: Clone Repository
         uses: actions/checkout@v2
@@ -95,6 +96,6 @@ jobs:
 
       - name: Build
         run: |
-          npm run cross-build-${{ matrix.arch }}
           npm run build-deno
           npm run build-ts
+          npm run pre-build-${{ matrix.arch }}

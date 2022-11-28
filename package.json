@@ -48,6 +48,8 @@
     "lint": "eslint ./src --ext .ts",
     "prepublishOnly": "npm run build-ts",
     "pre-build": "prebuild --backend cmake-js --runtime napi --all --strip --verbose",
+    "pre-build-arm64": "prebuild --backend cmake-js --runtime napi --all --verbose --arch arm64 -- --CDCMAKE_TOOLCHAIN_FILE=\"$PWD/cmake/zig-toolchain-aarch64.cmake\"",
+    "pre-build-arm": "prebuild --backend cmake-js --runtime napi --all --verbose --arch arm -- --CDCMAKE_TOOLCHAIN_FILE=\"$PWD/cmake/zig-toolchain-arm.cmake\"",
     "watch": "tsc -w --preserveWatchOutput"
   },
   "engines": {
