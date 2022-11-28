@@ -21,7 +21,7 @@ case $arch in
      ;;
 esac
 
-echo "Extracting dbus for arch"
+echo "Extracting dbus for $arch"
 
 mkdir -p temp
 cd temp
@@ -68,6 +68,16 @@ done
 mv root/usr/include ${arch}/include
 if [ "$arch" == "arm64" ]; then mv "root/usr/lib/aarch64-linux-gnu/dbus-1.0/include/dbus/dbus-arch-deps.h" "${arch}/include/dbus-1.0/dbus/"; fi
 if [ "$arch" == "armhf" ]; then mv "root/usr/lib/arm-linux-gnueabihf/dbus-1.0/include/dbus/dbus-arch-deps.h" "${arch}/include/dbus-1.0/dbus/"; fi
+
+if [ "$arch" == "armhf" ]
+then
+  libdir=$(zig env | grep lib_dir | cut -d '"' -f 4)
+  output="${libdir}/libc/glibc/sysdeps/arm/arm-features.h"
+  if [ ! -f "${output}" ]
+  then
+    sudo wget -q -c --content-disposition -O "${output}" "https://sourceware.org/git?p=glibc.git;a=blob_plain;f=sysdeps/arm/arm-features.h;hb=HEAD"
+  fi
+fi
 
 rm -rf root
 rm -rf *.deb
