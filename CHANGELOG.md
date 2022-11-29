@@ -1,3 +1,15 @@
+## [1.1.0](https://github.com/Symbitic/node-simpleble/compare/v1.0.1...v1.1.0) (2022-11-29)
+
+
+### Features
+
+* add arm64 cross-compile ([b931258](https://github.com/Symbitic/node-simpleble/commit/b931258436ef083b1901a0df3241f96be9e5c97f))
+
+
+### Bug Fixes
+
+* correct script name ([d77fbdb](https://github.com/Symbitic/node-simpleble/commit/d77fbdb97a767c07eefc409b56f3aff6c9028a45))
+
 ### [1.0.1](https://github.com/Symbitic/node-simpleble/compare/v1.0.0...v1.0.1) (2022-10-30)
 
 
