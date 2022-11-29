@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - '**'
-      - '!v*'
+      - '!v**'
   pull_request:
 
 jobs:
@@ -55,6 +55,19 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Run prebuild
+        run: npm run pre-build
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: builds
+          path: |
+            build/Release/*
+            prebuilds/*
+            !build/Release/*.node
+          retention-days: 1
+
   build-cross:
     runs-on: ubuntu-latest
     strategy:
@@ -99,3 +112,32 @@ jobs:
           npm run build-deno
           npm run build-ts
           npm run pre-build-${{ matrix.arch }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: cross-builds
+          path: |
+            prebuilds/*
+          retention-days: 1
+
+  test-deploy:
+    name: Test Deploy
+    permissions:
+      contents: write
+      packages: write
+    needs: [ build, build-cross ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone Repository
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: builds
+
+      - name: My test
+        run: ls -1 prebuilds
