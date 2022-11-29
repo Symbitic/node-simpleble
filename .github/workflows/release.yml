@@ -72,14 +72,71 @@ jobs:
             !build/Release/*.node
           retention-days: 1
 
+  build-cross:
+    name: Cross-build
+    permissions:
+      contents: write
+      packages: write
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch:
+          - arm64
+    steps:
+      - name: Clone Repository
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Install DBus
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libdbus-1-dev
+
+      - name: Install ziglang
+        uses: goto-bus-stop/setup-zig@v1
+        with:
+          version: 0.10.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: "npm"
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@main
+        with:
+          deno-version: 'v1.x'
+
+      - name: Install Deps
+        run: bash ./extract.sh ${{ matrix.arch }}
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Build
+        run: |
+          npm run build-deno
+          npm run build-ts
+          npm run pre-build-${{ matrix.arch }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: builds
+          path: |
+            prebuilds/*
+          retention-days: 1
+
   deploy:
     name: Deploy
     permissions:
       contents: write
       packages: write
-    needs: [ build ]
+    needs: [ build, build-cross ]
     runs-on: ubuntu-latest
-
     steps:
       - name: Clone Repository
         uses: actions/checkout@v2

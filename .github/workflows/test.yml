@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - '**'
+      - '!v*'
   pull_request:
 
 jobs:
