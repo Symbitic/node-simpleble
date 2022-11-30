@@ -128,8 +128,6 @@ jobs:
     steps:
       - name: Clone Repository
         uses: actions/checkout@v2
-        with:
-          submodules: recursive
 
       - name: Download artifacts (2)
         uses: actions/download-artifact@v2
@@ -137,4 +135,4 @@ jobs:
           name: cross-builds
 
       - name: My test
-        run: ls -1 prebuilds
+        run: find . -type f
