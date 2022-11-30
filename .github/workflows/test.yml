@@ -132,7 +132,13 @@ jobs:
       - name: Download artifacts (2)
         uses: actions/download-artifact@v2
         with:
-          name: cross-builds
+          path: prebuilds
+          #name: cross-builds
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          path: build/Release/
 
       - name: My test
         run: find . -type f
