@@ -122,7 +122,7 @@ jobs:
     permissions:
       contents: write
       packages: write
-    needs: [ build, build-cross, build-docker ]
+    needs: [ build, build-cross ]
     runs-on: ubuntu-latest
     steps:
       - name: Clone Repository
