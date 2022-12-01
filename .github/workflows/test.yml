@@ -10,6 +10,8 @@ on:
 jobs:
   build-docker:
     runs-on: ubuntu-latest
+    env:
+      DBus1_ROOT: ${{ github.workspace }}/cmake
     strategy:
       matrix:
         build:
@@ -19,7 +21,7 @@ jobs:
       image: ${{ matrix.build.image }}
       options: --user root
       env:
-        DBus1_ROOT: /usr/lib/aarch64-linux-gnu/cmake/DBus1
+        DBus1_ROOT: ${{ github.workspace }}/cmake
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
