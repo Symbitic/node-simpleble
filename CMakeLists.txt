@@ -52,7 +52,7 @@ if (ENABLE_FFI)
   add_library(simpleble-wrapper SHARED lib/wrapper.cpp)
   target_link_libraries(simpleble-wrapper PRIVATE simpleble-c)
   set_target_properties(simpleble-wrapper PROPERTIES
-    OUTPUT_NAME "simpleble"
+    OUTPUT_NAME "simpleble.${CMAKE_SYSTEM_PROCESSOR}"
     CXX_STANDARD 17
     CXX_VISIBILITY_PRESET hidden
     VISIBILITY_INLINES_HIDDEN YES

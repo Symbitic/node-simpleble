@@ -115,7 +115,9 @@ jobs:
         with:
           name: builds
           path: |
+            build/Release/*
             prebuilds/*
+            !build/Release/*.node
           retention-days: 1
 
   test-deploy:
