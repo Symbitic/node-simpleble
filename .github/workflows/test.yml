@@ -42,23 +42,3 @@ jobs:
 
     #- name: Build
     #  run: npm run pre-build
-
-
-
-
-  test-deploy:
-    name: Test Deploy
-    permissions:
-      contents: write
-      packages: write
-    needs: [ build, build-cross, build-docker ]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Clone Repository
-        uses: actions/checkout@v2
-
-      - name: Download artifacts
-        uses: actions/download-artifact@v2
-
-      - name: My test
-        run: find . -type f
