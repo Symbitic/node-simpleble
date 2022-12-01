@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         image:
-          - ghcr.io/dockcross/linux-arm64:latest
+          - dockcross/linux-arm64:latest
     container:
       image: ${{ matrix.image }}
       options: --user root
