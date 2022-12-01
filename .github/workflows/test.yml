@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/prebuild/linux-armv6:2
-      options: --user 1001
+      options: --user root
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
