@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         image:
-          - ghcr.io/prebuild/linux-arm64:2
+          - ghcr.io/dockcross/linux-arm64:latest
     container:
       image: ${{ matrix.image }}
       options: --user root
@@ -31,7 +31,7 @@ jobs:
     - name: Install DBus
       run: |
         apt-get update
-        apt-get install -y libdbus-1-dev cmake
+        apt-get install -y libdbus-1-dev ninja-build
 
     - name: Install Node.js
       uses: actions/setup-node@v3
