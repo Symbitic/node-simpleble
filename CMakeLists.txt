@@ -53,7 +53,7 @@ if (ENABLE_FFI)
   #if(arch STREQUAL "amd64")
   #  set(arch "x86_64")
   #endif()
-  #add_library(simpleble-wrapper SHARED lib/wrapper.cpp)
+  add_library(simpleble-wrapper SHARED lib/wrapper.cpp)
   target_link_libraries(simpleble-wrapper PRIVATE simpleble-c)
   set_target_properties(simpleble-wrapper PROPERTIES
     #OUTPUT_NAME "simpleble.${arch}"
