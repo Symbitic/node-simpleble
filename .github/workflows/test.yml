@@ -63,9 +63,10 @@ jobs:
         with:
           name: builds
           path: |
-            build/Release/*
+            build/Release/*.so
+            build/Release/*.dylib
+            build/Release/*.dll
             prebuilds/*
-            !build/Release/*.node
           retention-days: 1
 
   build-cross:
@@ -114,10 +115,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: builds
-          path: |
-            build/Release/*
-            prebuilds/*
-            !build/Release/*.node
+          path: prebuilds/*
           retention-days: 1
 
   test-deploy:

@@ -49,14 +49,15 @@ if (ENABLE_NODE)
 endif()
 
 if (ENABLE_FFI)
-  string(TOLOWER ${CMAKE_SYSTEM_PROCESSOR} arch)
-  if(arch STREQUAL "amd64")
-    set(arch "x86_64")
-  endif()
-  add_library(simpleble-wrapper SHARED lib/wrapper.cpp)
+  #string(TOLOWER ${CMAKE_SYSTEM_PROCESSOR} arch)
+  #if(arch STREQUAL "amd64")
+  #  set(arch "x86_64")
+  #endif()
+  #add_library(simpleble-wrapper SHARED lib/wrapper.cpp)
   target_link_libraries(simpleble-wrapper PRIVATE simpleble-c)
   set_target_properties(simpleble-wrapper PROPERTIES
-    OUTPUT_NAME "simpleble.${arch}"
+    #OUTPUT_NAME "simpleble.${arch}"
+    OUTPUT_NAME "simpleble"
     CXX_STANDARD 17
     CXX_VISIBILITY_PRESET hidden
     VISIBILITY_INLINES_HIDDEN YES
