@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         image:
-          - dockcross/linux-arm64:latest
+          - ghcr.io/prebuild/linux-arm64:2
     container:
       image: ${{ matrix.image }}
       options: --user root
@@ -30,8 +30,16 @@ jobs:
 
     - name: Install DBus
       run: |
+        echo "deb http://deb.debian.org/debian unstable main" | tee -a /etc/apt/sources.list
+        echo "Package: *
+        Pin: release a=bullseye
+        Pin-Priority: 700
+
+        Package: *
+        Pin: release a=unstable
+        Pin-Priority: 600" | tee -a /etc/apt/preferences
         apt-get update
-        apt-get install -y libdbus-1-dev ninja-build
+        apt-get -t unstable install libdbus-1-dev ninja-build
 
     - name: Install Node.js
       uses: actions/setup-node@v3
