@@ -30,7 +30,7 @@ jobs:
 
     - name: Install DBus
       run: |
-        echo "deb http://deb.debian.org/debian testing main" | tee -a /etc/apt/sources.list
+        echo "deb http://deb.debian.org/debian unstable main" | tee -a /etc/apt/sources.list
         printf "Package: *\nPin: release a=bullseye\nPin-Priority: 700\n\nPackage: *\nPin: release a=unstable\nPin-Priority: 600\n" | tee -a /etc/apt/preferences
         apt-get update
         apt-get -t unstable install -y libdbus-1-dev ninja-build
