@@ -67,16 +67,13 @@ jobs:
         with:
           name: builds
           path: |
-            build/Release/*
+            build/Release/*.dll
+            build/Release/*.dylib
+            build/Release/*.so
             prebuilds/*
-            !build/Release/*.node
           retention-days: 1
 
   build-cross:
-    name: Cross-build
-    permissions:
-      contents: write
-      packages: write
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -103,7 +100,6 @@ jobs:
         with:
           node-version: 16
           cache: "npm"
-          registry-url: 'https://registry.npmjs.org'
 
       - name: Setup Deno
         uses: denoland/setup-deno@main
@@ -117,16 +113,14 @@ jobs:
         run: npm ci --ignore-scripts
 
       - name: Build
-        run: |
-          npm run build-deno
-          npm run build-ts
-          npm run pre-build-${{ matrix.arch }}
+        run: npm run pre-build-${{ matrix.arch }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: cross-builds
+          name: builds
           path: |
+            build/Release/*.so
             prebuilds/*
           retention-days: 1
 
@@ -168,10 +162,10 @@ jobs:
         with:
           fail_on_unmatched_files: false
           files: |
-            ./build/Release/*.so
-            ./build/Release/*.dylib
-            ./build/Release/*.dll
-            ./prebuilds/*.tar.gz
+            ./builds/build/Release/*.dll
+            ./builds/build/Release/*.dylib
+            ./builds/build/Release/*.so
+            ./builds/prebuilds/*.tar.gz
 
       - name: Publish
         run: npm publish

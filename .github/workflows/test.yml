@@ -8,124 +8,50 @@ on:
   pull_request:
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os:
-          - ubuntu-latest
-          - macos-latest
-          - windows-latest
-    steps:
-      - name: Clone Repository
-        uses: actions/checkout@v2
-        with:
-          submodules: recursive
-
-      - name: Install DBus
-        if: contains(matrix.os, 'ubuntu')
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libdbus-1-dev
-
-      - name: Setup CMake
-        if: contains(matrix.os, 'macos')
-        uses: jwlawson/actions-setup-cmake@v1.12
-        with:
-          cmake-version: '3.21.x'
-
-      - name: Add msbuild to PATH
-        if: contains(matrix.os, 'windows')
-        uses: microsoft/setup-msbuild@v1.0.2
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: "npm"
-
-      - name: Setup Deno
-        uses: denoland/setup-deno@main
-        with:
-          deno-version: 'v1.x'
-
-      - name: Install dependencies
-        run: npm ci --ignore-scripts
-
-      - name: Build
-        run: npm run build
-
-      - name: Run prebuild
-        run: npm run pre-build
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: builds
-          path: |
-            build/Release/*.dll
-            build/Release/*.dylib
-            build/Release/*.so
-            prebuilds/*
-          retention-days: 1
-
-  build-cross:
+  build-docker:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        arch:
-          - arm64
+    container:
+      image: ghcr.io/prebuild/linux-armv6:2
     steps:
-      - name: Clone Repository
-        uses: actions/checkout@v2
-        with:
-          submodules: recursive
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
 
-      - name: Install DBus
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libdbus-1-dev
+    - name: Set ownership
+      run: |
+        # Workaround for https://github.com/actions/runner/issues/2033
+        chown -R $(id -u):$(id -g) $PWD
 
-      - name: Install ziglang
-        uses: goto-bus-stop/setup-zig@v1
-        with:
-          version: 0.10.0
+    - name: Install DBus
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libdbus-1-dev cmake
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: "npm"
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16.x'
+        cache: "npm"
 
-      - name: Setup Deno
-        uses: denoland/setup-deno@main
-        with:
-          deno-version: 'v1.x'
+    #- name: Install dependencies
+    #  run: npm ci --ignore-scripts
 
-      - name: Install Deps
-        run: bash ./extract.sh ${{ matrix.arch }}
+    - name: Test 1
+      run: find . -type f
 
-      - name: Install dependencies
-        run: npm ci --ignore-scripts
+    #- name: Build
+    #  run: npm run pre-build
 
-      - name: Build
-        run: npm run pre-build-${{ matrix.arch }}
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: builds
-          path: |
-            build/Release/*.so
-            prebuilds/*
-          retention-days: 1
+
 
   test-deploy:
     name: Test Deploy
     permissions:
       contents: write
       packages: write
-    needs: [ build, build-cross ]
+    needs: [ build, build-cross, build-docker ]
     runs-on: ubuntu-latest
     steps:
       - name: Clone Repository
