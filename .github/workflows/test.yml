@@ -116,20 +116,3 @@ jobs:
             build/Release/*.so
             prebuilds/*
           retention-days: 1
-
-  test-deploy:
-    name: Test Deploy
-    permissions:
-      contents: write
-      packages: write
-    needs: [ build, build-cross ]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Clone Repository
-        uses: actions/checkout@v2
-
-      - name: Download artifacts
-        uses: actions/download-artifact@v2
-
-      - name: My test
-        run: find . -type f

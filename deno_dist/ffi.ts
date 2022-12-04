@@ -1,6 +1,6 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Plug } from "https://deno.land/x/plug@0.5.2/mod.ts";
+import { Plug } from "https://deno.land/x/plug@1.0.0-rc.3/mod.ts";
 import { dirname, fromFileUrl, resolve } from "https://deno.land/std@0.158.0/path/posix.ts";
 import { symbols } from "./symbols.ts";
 import { Bindings } from "./bindings.ts";
@@ -92,6 +92,12 @@ export const resolveBindings: BindingsResolver = async (): Promise<Bindings> => 
         name: LIBNAME,
         url: `${REPO}/releases/download/v${VERSION}`,
         policy: Plug.CachePolicy.STORE,
+        suffixes: {
+          linux: {
+            aarch64: ".aarch64",
+            x86_64: ".x86_64",
+          },
+        },
       }, symbols);
     } else {
       const importDir = dirname(fromFileUrl(import.meta.url));
@@ -99,7 +105,7 @@ export const resolveBindings: BindingsResolver = async (): Promise<Bindings> => 
       const filename = {
         windows: `${buildDir}/Release/${LIBNAME}.dll`,
         darwin: `${buildDir}/Release/lib${LIBNAME}.dylib`,
-        linux: `${buildDir}/Release/lib${LIBNAME}.so`,
+        linux: `${buildDir}/Release/lib${LIBNAME}.${Deno.build.arch}.so`,
       }[Deno.build.os];
       lib = Deno.dlopen(filename, symbols);
     }
