@@ -1,6 +1,6 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Plug } from "https://deno.land/x/plug@1.0.0-rc.3/mod.ts";
+import { dlopen, FetchOptions } from "https://deno.land/x/plug@1.0.0/mod.ts";
 import { dirname, fromFileUrl, resolve } from "https://deno.land/std@0.158.0/path/posix.ts";
 import { symbols } from "./symbols.ts";
 import { Bindings } from "./bindings.ts";
@@ -88,17 +88,18 @@ export const resolveBindings: BindingsResolver = async (): Promise<Bindings> => 
   if (!lib) {
     // Load the shared library locally or remotely.
     if (PRODUCTION) {
-      lib = await Plug.prepare({
+      const options: FetchOptions = {
         name: LIBNAME,
         url: `${REPO}/releases/download/v${VERSION}`,
-        policy: Plug.CachePolicy.STORE,
         suffixes: {
           linux: {
             aarch64: ".aarch64",
             x86_64: ".x86_64",
           },
         },
-      }, symbols);
+      };
+
+      lib = await dlopen(options, symbols);
     } else {
       const importDir = dirname(fromFileUrl(import.meta.url));
       const buildDir = resolve(importDir, "..", "build");
@@ -107,7 +108,7 @@ export const resolveBindings: BindingsResolver = async (): Promise<Bindings> => 
         darwin: `${buildDir}/Release/lib${LIBNAME}.dylib`,
         linux: `${buildDir}/Release/lib${LIBNAME}.${Deno.build.arch}.so`,
       }[Deno.build.os];
-      lib = Deno.dlopen(filename, symbols);
+      lib = await dlopen(filename, symbols);
     }
   }
 
@@ -167,11 +168,18 @@ export class SimpleBLE implements Bindings {
     if (!lib) {
       // Load the shared library locally or remotely.
       if (PRODUCTION) {
-        lib = await Plug.prepare({
+        const options: FetchOptions = {
           name: LIBNAME,
           url: `${REPO}/releases/download/v${VERSION}`,
-          policy: Plug.CachePolicy.STORE,
-        }, symbols);
+          suffixes: {
+            linux: {
+              aarch64: ".aarch64",
+              x86_64: ".x86_64",
+            },
+          },
+        };
+
+        lib = await dlopen(options, symbols);
       } else {
         const importDir = dirname(fromFileUrl(import.meta.url));
         const buildDir = resolve(importDir, "..", "build");
@@ -180,7 +188,7 @@ export class SimpleBLE implements Bindings {
           darwin: `${buildDir}/Release/lib${LIBNAME}.dylib`,
           linux: `${buildDir}/Release/lib${LIBNAME}.so`,
         }[Deno.build.os];
-        lib = Deno.dlopen(filename, symbols);
+        lib = await dlopen(filename, symbols);
       }
     }
 
